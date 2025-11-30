@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:harish_portfolio/constant.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -14,6 +16,9 @@ class MobileScreen extends StatefulWidget {
 
 class _MobileScreenState extends State<MobileScreen> {
   final ScrollController _scrollController = ScrollController();
+  final ScrollController _animationController = ScrollController();
+  Timer? _timer;
+
   final GlobalKey aboutKey = GlobalKey();
   final GlobalKey homeKey = GlobalKey();
   final GlobalKey experienceKey = GlobalKey();
@@ -38,6 +43,106 @@ class _MobileScreenState extends State<MobileScreen> {
     }
   }
 
+  Future<void> openGmailWeb({
+    required String toEmail,
+  }) async {
+    // Build body with extra details
+    const String fullBody = """
+
+""";
+
+    final Uri gmailUrl = Uri.parse(
+      'https://mail.google.com/mail/?view=cm&fs=1'
+      '&to=$toEmail'
+      '&body=${Uri.encodeComponent(fullBody)}',
+    );
+
+    if (await canLaunchUrl(gmailUrl)) {
+      await launchUrl(gmailUrl, mode: LaunchMode.externalApplication);
+      // emailController.clear();
+      // nameController.clear();
+      // contactController.clear();
+      // descriptionController.clear();
+      // bodyController.clear();
+    } else {
+      throw '❌ Could not open Gmail';
+    }
+  }
+
+  void _startAutoScroll() {
+    const double speed = 0.5;
+    const int tick = 16;
+
+    _timer = Timer.periodic(const Duration(milliseconds: tick), (_) {
+      if (!_animationController.hasClients) return;
+
+      double next = _animationController.offset + speed;
+      double max = _animationController.position.maxScrollExtent;
+
+      // When end reached → restart from beginning
+      if (next >= max) {
+        _animationController.jumpTo(0); // go back to first item
+      } else {
+        _animationController.jumpTo(next);
+      }
+    });
+  }
+
+  List<Map<String, dynamic>> techStacks = [
+    {
+      'imagePath': 'assets/svg/flutter-icon.svg',
+      'text': 'Flutter',
+      'color': Colors.blue,
+    },
+    {
+      'imagePath': 'assets/svg/dart-icon.svg',
+      'text': 'Dart',
+      'color': Colors.cyanAccent,
+    },
+    {
+      'imagePath': 'assets/svg/git-icon.svg',
+      'text': 'Git',
+      'color': Colors.red,
+    },
+    {
+      'imagePath': 'assets/svg/github-icon.svg',
+      'text': 'GitHub',
+      'color': Colors.blue,
+    },
+    {
+      'imagePath': 'assets/svg/database.svg',
+      'text': 'Sqflite',
+      'color': Colors.greenAccent,
+    },
+    {
+      'imagePath': 'assets/svg/firebase-icon.svg',
+      'text': 'Firebase',
+      'color': Colors.orange,
+    },
+    {
+      'imagePath': 'assets/svg/provider-icon.svg',
+      'text': 'Provider',
+      'color': Colors.yellow,
+    },
+    {
+      'imagePath': 'assets/svg/razorpay-icon.svg',
+      'text': 'Razorpay',
+      'color': Colors.blue,
+    },
+  ];
+  @override
+  void initState() {
+    _startAutoScroll();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     globalHeight = MediaQuery.of(context).size.height;
@@ -52,6 +157,21 @@ class _MobileScreenState extends State<MobileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 40,
             children: [
+              const Center(
+                child: Text(
+                  'Portfolio',
+                  style: TextStyle(
+                    fontFamily: 'Preahvihear',
+                    fontSize: 28,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              Divider(
+                thickness: 1,
+                color: Colors.grey.shade400,
+              ),
               InkWell(
                 onTap: () {
                   scrollToSection(homeKey);
@@ -118,7 +238,7 @@ class _MobileScreenState extends State<MobileScreen> {
                   Navigator.pop(context);
                 },
                 child: const AutoSizeText(
-                  'About',
+                  'Contact',
                   style: TextStyle(
                     fontFamily: 'Preahvihear',
                     fontSize: 17.5,
@@ -190,8 +310,6 @@ class _MobileScreenState extends State<MobileScreen> {
                         width: 300,
                         decoration: BoxDecoration(
                           gradient: const RadialGradient(
-                            // focalRadius: 20,
-                            // transform: GradientRotation(20),
                             colors: [
                               Colors.white,
                               Color(0xff38215B),
@@ -204,7 +322,7 @@ class _MobileScreenState extends State<MobileScreen> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(400),
                           child: Image.asset(
-                            'assets/png/flutter.png',
+                            'assets/png/profile.jpg',
                             fit: BoxFit.contain,
                             height: 100,
                             width: 100,
@@ -213,26 +331,29 @@ class _MobileScreenState extends State<MobileScreen> {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    const Row(
+                    const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         AutoSizeText(
-                          "Hello! I Am ",
+                          "Hello! I Am",
                           style: TextStyle(
                             fontFamily: 'Preahvihear',
                             fontWeight: FontWeight.w500,
-                            fontSize: 30,
+                            fontSize: 20,
                             color: Colors.white,
                           ),
+                          textAlign: TextAlign.center,
                         ),
                         AutoSizeText(
-                          "Harish.P",
+                          "Harish Panneerselvam",
                           style: TextStyle(
                             fontFamily: 'Preahvihear',
                             fontWeight: FontWeight.w500,
                             fontSize: 22,
                             color: Color(0xff7127BA),
                           ),
+                          textAlign: TextAlign.center,
                         ),
                       ],
                     ),
@@ -245,6 +366,7 @@ class _MobileScreenState extends State<MobileScreen> {
                         fontSize: 14,
                         color: Colors.white,
                       ),
+                      textAlign: TextAlign.start,
                     ),
                     const SizedBox(height: 15),
                     const AutoSizeText.rich(
@@ -255,7 +377,7 @@ class _MobileScreenState extends State<MobileScreen> {
                             style: TextStyle(
                               fontFamily: 'Preahvihear',
                               fontWeight: FontWeight.w500,
-                              fontSize: 25,
+                              fontSize: 20,
                               color: Colors.white,
                             ),
                           ),
@@ -273,7 +395,7 @@ class _MobileScreenState extends State<MobileScreen> {
                             style: TextStyle(
                               fontFamily: 'Preahvihear',
                               fontWeight: FontWeight.w500,
-                              fontSize: 25,
+                              fontSize: 20,
                               color: Color(0xff7127BA),
                             ),
                           ),
@@ -517,44 +639,36 @@ class _MobileScreenState extends State<MobileScreen> {
                       key: technlogiesKey,
                     ),
                     const AutoSizeText(
-                      'Technologies',
+                      'Tech Stack',
                       style: TextStyle(
                         fontFamily: 'Preahvihear',
                         fontWeight: FontWeight.w500,
-                        fontSize: 25,
+                        fontSize: 30,
                         color: Colors.white,
                       ),
                     ),
-                    const SizedBox(height: 30),
-                    Column(
-                      children: [
-                        RichText(
-                          text: const TextSpan(
+                    const SizedBox(height: 40),
+                    SizedBox(
+                      height: 120,
+                      child: ListView.builder(
+                        controller: _animationController,
+                        scrollDirection: Axis.horizontal,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemCount: techStacks.length,
+                        itemBuilder: (context, index) => Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                          child: Row(
+                            spacing: 20,
                             children: [
-                              TextSpan(
-                                text: 'I don’t just learn tech,\n',
-                                style: TextStyle(
-                                  fontFamily: 'Preahvihear',
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              TextSpan(
-                                text: ' I turn it into experiences!',
-                                style: TextStyle(
-                                  fontFamily: 'Preahvihear',
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 18,
-                                  color: Color(0xff7127BA),
-                                ),
+                              techStack(
+                                imagePath: techStacks[index]['imagePath'],
+                                title: techStacks[index]['text'],
+                                color: techStacks[index]['color'],
                               ),
                             ],
                           ),
                         ),
-                        const SizedBox(height: 40),
-                        Image.asset('assets/png/skills.png'),
-                      ],
+                      ),
                     ),
                     SizedBox(
                       height: 50,
@@ -615,28 +729,28 @@ class _MobileScreenState extends State<MobileScreen> {
                             ),
                             const SizedBox(height: 15),
                             projectContainer(
-                              liveOnTap: () async {
-                                final Uri url = Uri.parse(
-                                    'https://play.google.com/store/apps/details?id=com.henkel.DigitalPresenter.Android');
-                                if (await canLaunchUrl(url)) {
-                                  await launchUrl(url,
-                                      mode: LaunchMode.externalApplication);
-                                } else {
-                                  throw 'Could not launch $url';
-                                }
-                              },
-                              liveOnTapIos: () async {
-                                final Uri url = Uri.parse(
-                                    'https://apps.apple.com/in/app/henkel-digital-presenter/id1563799427');
-                                if (await canLaunchUrl(url)) {
-                                  await launchUrl(url,
-                                      mode: LaunchMode.externalApplication);
-                                } else {
-                                  throw 'Could not launch $url';
-                                }
-                              },
-                              liveUrl: 'Android mobile app',
-                              liveUrlIos: 'Ios mobile app',
+                              // liveOnTap: () async {
+                              //   final Uri url = Uri.parse(
+                              //       'https://play.google.com/store/apps/details?id=com.henkel.DigitalPresenter.Android');
+                              //   if (await canLaunchUrl(url)) {
+                              //     await launchUrl(url,
+                              //         mode: LaunchMode.externalApplication);
+                              //   } else {
+                              //     throw 'Could not launch $url';
+                              //   }
+                              // },
+                              // liveOnTapIos: () async {
+                              //   final Uri url = Uri.parse(
+                              //       'https://apps.apple.com/in/app/henkel-digital-presenter/id1563799427');
+                              //   if (await canLaunchUrl(url)) {
+                              //     await launchUrl(url,
+                              //         mode: LaunchMode.externalApplication);
+                              //   } else {
+                              //     throw 'Could not launch $url';
+                              //   }
+                              // },
+                              // liveUrl: 'Android mobile app',
+                              // liveUrlIos: 'Ios mobile app',
                               width: globalWidth,
                               projectImage: Container(
                                 decoration: BoxDecoration(
@@ -684,9 +798,20 @@ class _MobileScreenState extends State<MobileScreen> {
                             ),
                             const SizedBox(height: 15),
                             projectContainer(
+                              liveOnTap: () async {
+                                final Uri url = Uri.parse(
+                                    'https://harshq0.github.io/zuvonne_website/');
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url,
+                                      mode: LaunchMode.externalApplication);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
+                              liveUrl: 'zuvonne website',
                               technologiesText: 'Flutter, Dart',
                               text:
-                                  'I have build a responsive website for desktop, tablet, and mobile using the Flutter framework. With a email sending feature, users can easily reach out for inquiries or support. The website is designed to provide a seamless user experience across all devices, ensuring accessibility and engagement for all visitors.',
+                                  'I have build a responsive website for desktop, tablet, and mobile using the Flutter framework. With a email sending feature, users can easily reach out for inquiries or support. The website is designed to provide a seamless user experience across all devices, ensuring accessibility and engagement for all visitors.The application is live on both Android and iOS.',
                             ),
                           ],
                         ),
@@ -704,24 +829,29 @@ class _MobileScreenState extends State<MobileScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Row(
-                      spacing: 5,
-                      children: [
-                        Image.asset(
-                          'assets/png/mail.png',
-                          color: Colors.white,
-                          height: 15,
-                        ),
-                        const AutoSizeText(
-                          'harishselvampanneer@gmail.com',
-                          style: TextStyle(
-                            fontFamily: 'Preahvihear',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 13,
+                    GestureDetector(
+                      onTap: () {
+                        openGmailWeb(toEmail: 'harishselvampanneer@gmail.com');
+                      },
+                      child: Row(
+                        spacing: 5,
+                        children: [
+                          Image.asset(
+                            'assets/png/mail.png',
                             color: Colors.white,
+                            height: 15,
                           ),
-                        ),
-                      ],
+                          const AutoSizeText(
+                            'harishselvampanneer@gmail.com',
+                            style: TextStyle(
+                              fontFamily: 'Preahvihear',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 13,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 40),
                     Row(
@@ -944,4 +1074,36 @@ class _MobileScreenState extends State<MobileScreen> {
       ),
     );
   }
+}
+
+Widget techStack(
+    {required String imagePath, required String title, Color? color}) {
+  return Column(
+    spacing: 10,
+    children: [
+      Container(
+        height: 60,
+        width: 60,
+        decoration: BoxDecoration(
+          border: Border.all(color: const Color.fromARGB(96, 200, 200, 200)),
+          color: const Color.fromARGB(255, 176, 176, 176).withOpacity(0.1),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: Center(
+          child: SvgPicture.asset(
+            imagePath,
+            color: color,
+            height: 30,
+          ),
+        ),
+      ),
+      Text(title,
+          style: const TextStyle(
+            fontFamily: 'poppins-medium',
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            overflow: TextOverflow.visible,
+          )),
+    ],
+  );
 }

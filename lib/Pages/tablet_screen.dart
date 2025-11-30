@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:harish_portfolio/constant.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -14,6 +16,8 @@ class TabletScreen extends StatefulWidget {
 
 class _TabletScreenState extends State<TabletScreen> {
   final ScrollController _scrollController = ScrollController();
+  final ScrollController _animationController = ScrollController();
+  Timer? _timer;
   final GlobalKey homeKey = GlobalKey();
   final GlobalKey experienceKey = GlobalKey();
   final GlobalKey skillKey = GlobalKey();
@@ -76,11 +80,106 @@ class _TabletScreenState extends State<TabletScreen> {
     }
   }
 
+  Future<void> openGmailWeb({
+    required String toEmail,
+  }) async {
+    // Build body with extra details
+    const String fullBody = """
+
+""";
+
+    final Uri gmailUrl = Uri.parse(
+      'https://mail.google.com/mail/?view=cm&fs=1'
+      '&to=$toEmail'
+      '&body=${Uri.encodeComponent(fullBody)}',
+    );
+
+    if (await canLaunchUrl(gmailUrl)) {
+      await launchUrl(gmailUrl, mode: LaunchMode.externalApplication);
+      // emailController.clear();
+      // nameController.clear();
+      // contactController.clear();
+      // descriptionController.clear();
+      // bodyController.clear();
+    } else {
+      throw '❌ Could not open Gmail';
+    }
+  }
+
+  void _startAutoScroll() {
+    const double speed = 0.5;
+    const int tick = 16;
+
+    _timer = Timer.periodic(const Duration(milliseconds: tick), (_) {
+      if (!_animationController.hasClients) return;
+
+      double next = _animationController.offset + speed;
+      double max = _animationController.position.maxScrollExtent;
+
+      // When end reached → restart from beginning
+      if (next >= max) {
+        _animationController.jumpTo(0); // go back to first item
+      } else {
+        _animationController.jumpTo(next);
+      }
+    });
+  }
+
+  List<Map<String, dynamic>> techStacks = [
+    {
+      'imagePath': 'assets/svg/flutter-icon.svg',
+      'text': 'Flutter',
+      'color': Colors.blue,
+    },
+    {
+      'imagePath': 'assets/svg/dart-icon.svg',
+      'text': 'Dart',
+      'color': Colors.cyanAccent,
+    },
+    {
+      'imagePath': 'assets/svg/git-icon.svg',
+      'text': 'Git',
+      'color': Colors.red,
+    },
+    {
+      'imagePath': 'assets/svg/github-icon.svg',
+      'text': 'GitHub',
+      'color': Colors.blue,
+    },
+    {
+      'imagePath': 'assets/svg/database.svg',
+      'text': 'Sqflite',
+      'color': Colors.greenAccent,
+    },
+    {
+      'imagePath': 'assets/svg/firebase-icon.svg',
+      'text': 'Firebase',
+      'color': Colors.orange,
+    },
+    {
+      'imagePath': 'assets/svg/provider-icon.svg',
+      'text': 'Provider',
+      'color': Colors.yellow,
+    },
+    {
+      'imagePath': 'assets/svg/razorpay-icon.svg',
+      'text': 'Razorpay',
+      'color': Colors.blue,
+    },
+  ];
+
   @override
   void initState() {
-    // TODO: implement initState
+    _startAutoScroll();
     super.initState();
     _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -182,7 +281,7 @@ class _TabletScreenState extends State<TabletScreen> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(400),
                           child: Image.asset(
-                            'assets/png/flutter.png',
+                            'assets/png/profile.jpg',
                             fit: BoxFit.contain,
                             height: 100,
                             width: 100,
@@ -199,16 +298,16 @@ class _TabletScreenState extends State<TabletScreen> {
                           style: TextStyle(
                             fontFamily: 'Preahvihear',
                             fontWeight: FontWeight.w500,
-                            fontSize: 30,
+                            fontSize: 22,
                             color: Colors.white,
                           ),
                         ),
                         AutoSizeText(
-                          "Harish.P",
+                          "Harish Panneerselvam",
                           style: TextStyle(
                             fontFamily: 'Preahvihear',
                             fontWeight: FontWeight.w500,
-                            fontSize: 22,
+                            fontSize: 30,
                             color: Color(0xff7127BA),
                           ),
                         ),
@@ -239,7 +338,7 @@ class _TabletScreenState extends State<TabletScreen> {
                             ),
                           ),
                           TextSpan(
-                            text: 'smooth experiences',
+                            text: 'smooth experiences ',
                             style: TextStyle(
                               fontFamily: 'Preahvihear',
                               fontWeight: FontWeight.w500,
@@ -503,7 +602,7 @@ class _TabletScreenState extends State<TabletScreen> {
                       key: skillKey,
                     ),
                     const AutoSizeText(
-                      'Technologies',
+                      'Tech Stack',
                       style: TextStyle(
                         fontFamily: 'Preahvihear',
                         fontWeight: FontWeight.w500,
@@ -512,35 +611,27 @@ class _TabletScreenState extends State<TabletScreen> {
                       ),
                     ),
                     const SizedBox(height: 40),
-                    Column(
-                      children: [
-                        RichText(
-                          text: const TextSpan(
+                    SizedBox(
+                      height: 120,
+                      child: ListView.builder(
+                        controller: _animationController,
+                        scrollDirection: Axis.horizontal,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemCount: techStacks.length,
+                        itemBuilder: (context, index) => Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                          child: Row(
+                            spacing: 20,
                             children: [
-                              TextSpan(
-                                text: 'I don’t just learn tech,',
-                                style: TextStyle(
-                                  fontFamily: 'Preahvihear',
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 22,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              TextSpan(
-                                text: ' I turn it into experiences!',
-                                style: TextStyle(
-                                  fontFamily: 'Preahvihear',
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 22,
-                                  color: Color(0xff7127BA),
-                                ),
+                              techStack(
+                                imagePath: techStacks[index]['imagePath'],
+                                title: techStacks[index]['text'],
+                                color: techStacks[index]['color'],
                               ),
                             ],
                           ),
                         ),
-                        const SizedBox(height: 40),
-                        Image.asset('assets/png/skills.png'),
-                      ],
+                      ),
                     ),
                     SizedBox(
                       height: 50,
@@ -571,8 +662,43 @@ class _TabletScreenState extends State<TabletScreen> {
                             ),
                             const SizedBox(height: 30),
                             projectContainer(
-                                technologiesText:
-                                    'Flutter, Dart, REST API, FCM, Rasorpay (Payment Gateway).',
+                                projectImage: Container(
+                                  decoration: BoxDecoration(
+                                      color: const Color(0xff2B0B3A),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 30.0, top: 30.0),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Image.asset('assets/png/iot.png',
+                                          height: 160),
+                                    ),
+                                  ),
+                                ),
+                                technologiesUsed: Column(
+                                  spacing: 5,
+                                  children: [
+                                    Row(
+                                      spacing: 10,
+                                      children: [
+                                        techUsed(text: 'Flutter'),
+                                        techUsed(text: 'Dart'),
+                                        techUsed(text: 'REST API'),
+                                      ],
+                                    ),
+                                    Row(
+                                      spacing: 10,
+                                      children: [
+                                        techUsed(text: 'FCM'),
+                                        techUsed(text: 'Rasorpay'),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                width: globalWidth * 0.55,
+                                // technologiesText:
+                                // 'Flutter, Dart, REST API, FCM, Rasorpay (Payment Gateway).',
                                 text:
                                     'I built a responsive design for both Android and iOS applications for customer and installer sides using the Flutter framework. I implemented REST API integrations to support real-time data flow and improve app responsiveness. I integrated Firebase Cloud Messaging (FCM) for push notifications and real-time alerts. I focused on performance optimization, error handling, and ensuring smooth UI transitions. '),
                           ],
@@ -601,29 +727,31 @@ class _TabletScreenState extends State<TabletScreen> {
                             ),
                             const SizedBox(height: 30),
                             projectContainer(
-                              liveOnTap: () async {
-                                final Uri url = Uri.parse(
-                                    'https://play.google.com/store/apps/details?id=com.henkel.DigitalPresenter.Android');
-                                if (await canLaunchUrl(url)) {
-                                  await launchUrl(url,
-                                      mode: LaunchMode.externalApplication);
-                                } else {
-                                  throw 'Could not launch $url';
-                                }
-                              },
-                              liveOnTapIos: () async {
-                                final Uri url = Uri.parse(
-                                    'https://apps.apple.com/in/app/henkel-digital-presenter/id1563799427');
-                                if (await canLaunchUrl(url)) {
-                                  await launchUrl(url,
-                                      mode: LaunchMode.externalApplication);
-                                } else {
-                                  throw 'Could not launch $url';
-                                }
-                              },
-                              liveUrl: 'Android mobile app',
-                              liveUrlIos: 'Ios mobile app',
-                              width: globalWidth,
+                              // liveOnTap: () async {
+                              //   final Uri url = Uri.parse(
+                              //       'https://play.google.com/store/apps/details?id=com.henkel.DigitalPresenter.Android');
+                              //   if (await canLaunchUrl(url)) {
+                              //     await launchUrl(url,
+                              //         mode: LaunchMode.externalApplication);
+                              //   } else {
+                              //     throw 'Could not launch $url';
+                              //   }
+                              // },
+                              // liveOnTapIos: () async {
+                              //   final Uri url = Uri.parse(
+                              //       'https://apps.apple.com/in/app/henkel-digital-presenter/id1563799427');
+                              //   if (await canLaunchUrl(url)) {
+                              //     await launchUrl(url,
+                              //         mode: LaunchMode.externalApplication);
+                              //   } else {
+                              //     throw 'Could not launch $url';
+                              //   }
+                              // },
+                              // liveUrl: 'Android mobile app',
+                              // liveUrlIos: 'Ios mobile app',
+                              alignmentImage: Alignment.centerLeft,
+                              alignmentContainer: Alignment.centerRight,
+                              width: globalWidth * 0.55,
                               projectImage: Container(
                                 decoration: BoxDecoration(
                                     color: const Color(0xff2B0B3A),
@@ -634,15 +762,37 @@ class _TabletScreenState extends State<TabletScreen> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(20),
                                     child: Image.asset(
-                                        'assets/png/zetstron.png',
-                                        height: 300),
+                                        'assets/png/online-merchandisers.png',
+                                        height: 160),
                                   ),
                                 ),
                               ),
-                              technologiesText:
-                                  'Flutter, Dart, REST API, Provider(State Management),MVVM, Animations.',
+                              // technologiesText:
+                              // 'Flutter, Dart, REST API, Provider(State Management),\nMVVM, Animations.',
+                              technologiesUsed: Column(
+                                spacing: 5,
+                                children: [
+                                  Row(
+                                    spacing: 10,
+                                    children: [
+                                      techUsed(text: 'Flutter'),
+                                      techUsed(text: 'Dart'),
+                                      techUsed(text: 'REST API'),
+                                      techUsed(text: 'Provider'),
+                                    ],
+                                  ),
+                                  Row(
+                                    spacing: 10,
+                                    children: [
+                                      techUsed(text: 'MVVM'),
+                                      techUsed(text: 'Animation'),
+                                      techUsed(text: 'Sqflite'),
+                                    ],
+                                  )
+                                ],
+                              ),
                               text:
-                                  'Developed a digital application for sales and merchandising teams to view, manage, and present Henkel Beauty Care products across GCC retail stores. The app includes product details, brand visuals, features, benefits, barcodes, and must-stock lists, helping teams ensure brand consistency, planogram compliance, and effective in-store execution. It serves as a reference and presentation tool, enhancing efficiency and accuracy during store visits.',
+                                  'Developed a digital application for sales and merchandising teams to view, manage, and present Henkel Beauty Care products across GCC retail stores. The app includes product details, brand visuals, features, benefits, barcodes, and must-stock lists, helping teams ensure brand consistency, planogram compliance, and effective in-store execution. It serves as a reference and presentation tool, enhancing efficiency and accuracy during store visits.The application is live on both Android and iOS.',
                             ),
                           ],
                         ),
@@ -670,18 +820,18 @@ class _TabletScreenState extends State<TabletScreen> {
                             ),
                             const SizedBox(height: 30),
                             projectContainer(
-                              // liveOnTap: () async {
-                              //   final Uri url =
-                              //       Uri.parse('https://www.zetstron.com/');
-                              //   if (await canLaunchUrl(url)) {
-                              //     await launchUrl(url,
-                              //         mode: LaunchMode.externalApplication);
-                              //   } else {
-                              //     throw 'Could not launch $url';
-                              //   }
-                              // },
-                              // liveUrl: 'www.zetstron.com',
-                              width: globalWidth,
+                              liveOnTap: () async {
+                                final Uri url = Uri.parse(
+                                    'https://harshq0.github.io/zuvonne_website/');
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url,
+                                      mode: LaunchMode.externalApplication);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
+                              liveUrl: 'zuvonne website',
+                              width: globalWidth * 0.48,
                               projectImage: Container(
                                 decoration: BoxDecoration(
                                     color: const Color(0xff2B0B3A),
@@ -691,13 +841,19 @@ class _TabletScreenState extends State<TabletScreen> {
                                       left: 30.0, top: 30.0),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(20),
-                                    child: Image.asset(
-                                        'assets/png/zetstron.png',
-                                        height: 300),
+                                    child: Image.asset('assets/png/zuvonne.png',
+                                        height: 160),
                                   ),
                                 ),
                               ),
-                              technologiesText: 'Flutter, Dart.',
+                              technologiesUsed: Row(
+                                spacing: 10,
+                                children: [
+                                  techUsed(text: 'Flutter'),
+                                  techUsed(text: 'Dart'),
+                                ],
+                              ),
+                              // technologiesText: 'Flutter, Dart.',
                               text:
                                   'I have build a responsive website for desktop, tablet, and mobile using the Flutter framework. With a email sending feature, users can easily reach out for inquiries or support. The website is designed to provide a seamless user experience across all devices, ensuring accessibility and engagement for all visitors.',
                             ),
@@ -712,7 +868,7 @@ class _TabletScreenState extends State<TabletScreen> {
                     ),
                     const AutoSizeText(
                       'Contact',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Preahvihear',
                         fontWeight: FontWeight.w500,
                         fontSize: 30,
@@ -720,24 +876,29 @@ class _TabletScreenState extends State<TabletScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Row(
-                      spacing: 5,
-                      children: [
-                        Image.asset(
-                          'assets/png/mail.png',
-                          color: Colors.white,
-                          height: 20,
-                        ),
-                        const AutoSizeText(
-                          'harishselvampanneer@gmail.com',
-                          style: TextStyle(
-                            fontFamily: 'Preahvihear',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
+                    GestureDetector(
+                      onTap: () {
+                        openGmailWeb(toEmail: 'harishselvampanneer@gmail.com');
+                      },
+                      child: Row(
+                        spacing: 5,
+                        children: [
+                          Image.asset(
+                            'assets/png/mail.png',
                             color: Colors.white,
+                            height: 20,
                           ),
-                        ),
-                      ],
+                          const AutoSizeText(
+                            'harishselvampanneer@gmail.com',
+                            style: TextStyle(
+                              fontFamily: 'Preahvihear',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 40),
                     Row(
@@ -811,131 +972,155 @@ class _TabletScreenState extends State<TabletScreen> {
 
   Widget projectContainer({
     required String text,
-    required String technologiesText,
+    // required String technologiesText,
     double? width,
     Widget? projectImage,
+    required Widget technologiesUsed,
     String? liveUrl,
     String? liveUrlIos,
     void Function()? liveOnTap,
     void Function()? liveOnTapIos,
+    AlignmentGeometry? alignmentImage = Alignment.centerRight,
+    AlignmentGeometry? alignmentContainer = Alignment.centerLeft,
   }) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-        child: Container(
-          width: width,
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(15),
+    return Stack(
+      alignment: Alignment.centerRight,
+      children: [
+        // Positioned Image Behind
+        if (projectImage != null)
+          Align(
+            alignment: alignmentImage ?? Alignment.centerRight,
+            child: projectImage,
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 15,
-              children: [
-                AutoSizeText(
-                  text,
-                  style: const TextStyle(
-                    fontFamily: 'poppins-medium',
-                    fontSize: 16.5,
-                    fontWeight: FontWeight.w500,
-                    overflow: TextOverflow.visible,
-                  ),
+
+        // Foreground Blurred Glass Container
+        Align(
+          alignment: alignmentContainer ?? Alignment.centerLeft,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+              child: Container(
+                width: width,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(15),
                 ),
-                RichText(
-                  text: TextSpan(
-                    style: const TextStyle(
-                      fontFamily: 'poppins-medium',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 15,
                     children: [
-                      TextSpan(
-                        text: 'Technologies Used : $technologiesText ',
+                      AutoSizeText(
+                        text,
                         style: const TextStyle(
-                          fontFamily: 'poppins-medium',
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
                           color: Colors.white,
+                          fontFamily: 'poppins-medium',
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w500,
+                          overflow: TextOverflow.visible,
                         ),
                       ),
-                      WidgetSpan(
-                        alignment: PlaceholderAlignment.middle,
-                        child: Image.asset(
-                          'assets/png/arrow_point.png',
-                          height: 15,
-                        ),
+                      technologiesUsed,
+                      // RichText(
+                      //   text: TextSpan(
+                      //     style: const TextStyle(
+                      //       fontFamily: 'poppins-medium',
+                      //       fontSize: 14,
+                      //       fontWeight: FontWeight.w500,
+                      //       color: Colors.white,
+                      //     ),
+                      //     children: [
+                      //       TextSpan(
+                      //         text: 'Technologies Used : $technologiesText ',
+                      //         style: const TextStyle(
+                      //           fontFamily: 'poppins-medium',
+                      //           fontSize: 13,
+                      //           fontWeight: FontWeight.w500,
+                      //           color: Colors.white,
+                      //         ),
+                      //       ),
+                      //       WidgetSpan(
+                      //         alignment: PlaceholderAlignment.middle,
+                      //         child: Image.asset(
+                      //           'assets/png/arrow_point.png',
+                      //           height: 15,
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      Column(
+                        spacing: 5,
+                        children: [
+                          liveUrl != null
+                              ? Row(
+                                  spacing: 15,
+                                  children: [
+                                    const AutoSizeText(
+                                      'Live :',
+                                      style: TextStyle(
+                                        fontFamily: 'poppins-medium',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        overflow: TextOverflow.visible,
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: liveOnTap,
+                                      child: AutoSizeText(liveUrl,
+                                          style: const TextStyle(
+                                            fontFamily: 'poppins-medium',
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            overflow: TextOverflow.visible,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          )),
+                                    ),
+                                  ],
+                                )
+                              : const SizedBox(),
+                          liveUrlIos != null
+                              ? Row(
+                                  spacing: 15,
+                                  children: [
+                                    const AutoSizeText(
+                                      'Live :',
+                                      style: TextStyle(
+                                        fontFamily: 'poppins-medium',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        overflow: TextOverflow.visible,
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: liveOnTapIos,
+                                      child: AutoSizeText(liveUrlIos,
+                                          style: const TextStyle(
+                                            fontFamily: 'poppins-medium',
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            overflow: TextOverflow.visible,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          )),
+                                    ),
+                                  ],
+                                )
+                              : const SizedBox(),
+                        ],
                       ),
                     ],
                   ),
                 ),
-                Column(
-                  spacing: 5,
-                  children: [
-                    liveUrl != null
-                        ? Row(
-                            spacing: 15,
-                            children: [
-                              const AutoSizeText(
-                                'Live :',
-                                style: TextStyle(
-                                  fontFamily: 'poppins-medium',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  overflow: TextOverflow.visible,
-                                ),
-                              ),
-                              InkWell(
-                                onTap: liveOnTap,
-                                child: AutoSizeText(liveUrl,
-                                    style: const TextStyle(
-                                      fontFamily: 'poppins-medium',
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      overflow: TextOverflow.visible,
-                                      decoration: TextDecoration.underline,
-                                    )),
-                              ),
-                            ],
-                          )
-                        : const SizedBox(),
-                    liveUrlIos != null
-                        ? Row(
-                            spacing: 15,
-                            children: [
-                              const AutoSizeText(
-                                'Live :',
-                                style: TextStyle(
-                                  fontFamily: 'poppins-medium',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  overflow: TextOverflow.visible,
-                                ),
-                              ),
-                              InkWell(
-                                onTap: liveOnTapIos,
-                                child: AutoSizeText(liveUrlIos,
-                                    style: const TextStyle(
-                                      fontFamily: 'poppins-medium',
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      overflow: TextOverflow.visible,
-                                      decoration: TextDecoration.underline,
-                                    )),
-                              ),
-                            ],
-                          )
-                        : const SizedBox(),
-                  ],
-                ),
-              ],
+              ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 
@@ -987,5 +1172,80 @@ Widget _appBarTitle(
         ),
       ),
     ),
+  );
+}
+
+// Widget _skillDetails({required String image, required String name}) {
+//   return Row(spacing: 10, children: [
+//     SizedBox(
+//       height: 50,
+//       width: 50,
+//       child: Center(
+//         child: Image.asset(
+//           'assets/png/$image.png',
+//           height: 35,
+//         ),
+//       ),
+//     ),
+//     Text(
+//       name,
+//       style: const TextStyle(
+//           fontFamily: 'poppins-semiBold',
+//           fontWeight: FontWeight.w500,
+//           fontSize: 20,
+//           color: Colors.white),
+//     ),
+//   ]);
+// }
+Widget techUsed({required String text}) {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white.withOpacity(0.1),
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: const Color.fromARGB(96, 200, 200, 200)),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontFamily: 'poppins-medium',
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    ),
+  );
+}
+
+Widget techStack(
+    {required String imagePath, required String title, Color? color}) {
+  return Column(
+    spacing: 10,
+    children: [
+      Container(
+        height: 60,
+        width: 60,
+        decoration: BoxDecoration(
+          border: Border.all(color: const Color.fromARGB(96, 200, 200, 200)),
+          color: const Color.fromARGB(255, 176, 176, 176).withOpacity(0.1),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: Center(
+          child: SvgPicture.asset(
+            imagePath,
+            color: color,
+            height: 30,
+          ),
+        ),
+      ),
+      Text(title,
+          style: const TextStyle(
+            fontFamily: 'poppins-medium',
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            overflow: TextOverflow.visible,
+          )),
+    ],
   );
 }

@@ -4,7 +4,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:harish_portfolio/constant.dart';
-import 'package:universal_html/html.dart' as html;
+import 'package:harish_portfolio/Utils/resume_helper.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 import 'package:harish_portfolio/Components/auto_scroll_list.dart';
 
@@ -57,13 +58,6 @@ class _MobileScreenState extends State<MobileScreen> {
     } catch (e) {
       debugPrint(e.toString());
     }
-  }
-
-  void _downloadResume() {
-    html.AnchorElement anchorElement =
-        html.AnchorElement(href: 'assets/harish_resume.pdf');
-    anchorElement.download = "Harish_Resume.pdf";
-    anchorElement.click();
   }
 
   // void _startAutoScroll() { ... } // Removed logic
@@ -857,7 +851,7 @@ class _MobileScreenState extends State<MobileScreen> {
                         socialIcon(
                           tooltipMessage: 'Resume',
                           image: 'assets/png/resume.png',
-                          onTap: () => _downloadResume(),
+                          onTap: () => downloadResume(),
                         ),
                       ],
                     ),

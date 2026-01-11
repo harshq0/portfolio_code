@@ -1,11 +1,12 @@
-import 'dart:async';
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:harish_portfolio/constant.dart';
+import 'package:universal_html/html.dart' as html;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:harish_portfolio/Components/auto_scroll_list.dart';
 
 class MobileScreen extends StatefulWidget {
   const MobileScreen({super.key});
@@ -16,8 +17,8 @@ class MobileScreen extends StatefulWidget {
 
 class _MobileScreenState extends State<MobileScreen> {
   final ScrollController _scrollController = ScrollController();
-  final ScrollController _animationController = ScrollController();
-  Timer? _timer;
+  // final ScrollController _animationController = ScrollController(); // Removed
+  // Timer? _timer; // Removed
 
   final GlobalKey aboutKey = GlobalKey();
   final GlobalKey homeKey = GlobalKey();
@@ -26,7 +27,7 @@ class _MobileScreenState extends State<MobileScreen> {
   final GlobalKey projectKey = GlobalKey();
   void _launchURL(String url) async {
     if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
       throw 'Could not launch $url';
     }
@@ -43,50 +44,29 @@ class _MobileScreenState extends State<MobileScreen> {
     }
   }
 
-  Future<void> openGmailWeb({
-    required String toEmail,
-  }) async {
-    // Build body with extra details
-    const String fullBody = """
-
-""";
-
-    final Uri gmailUrl = Uri.parse(
-      'https://mail.google.com/mail/?view=cm&fs=1'
-      '&to=$toEmail'
-      '&body=${Uri.encodeComponent(fullBody)}',
+  Future<void> _launchMailURL() async {
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: 'harishselvampanneer@gmail.com',
     );
 
-    if (await canLaunchUrl(gmailUrl)) {
-      await launchUrl(gmailUrl, mode: LaunchMode.externalApplication);
-      // emailController.clear();
-      // nameController.clear();
-      // contactController.clear();
-      // descriptionController.clear();
-      // bodyController.clear();
-    } else {
-      throw '❌ Could not open Gmail';
+    try {
+      if (!await launchUrl(emailLaunchUri)) {
+        throw 'Could not launch email';
+      }
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 
-  void _startAutoScroll() {
-    const double speed = 0.5;
-    const int tick = 16;
-
-    _timer = Timer.periodic(const Duration(milliseconds: tick), (_) {
-      if (!_animationController.hasClients) return;
-
-      double next = _animationController.offset + speed;
-      double max = _animationController.position.maxScrollExtent;
-
-      // When end reached → restart from beginning
-      if (next >= max) {
-        _animationController.jumpTo(0); // go back to first item
-      } else {
-        _animationController.jumpTo(next);
-      }
-    });
+  void _downloadResume() {
+    html.AnchorElement anchorElement =
+        html.AnchorElement(href: 'assets/harish_resume.pdf');
+    anchorElement.download = "Harish_Resume.pdf";
+    anchorElement.click();
   }
+
+  // void _startAutoScroll() { ... } // Removed logic
 
   List<Map<String, dynamic>> techStacks = [
     {
@@ -132,14 +112,14 @@ class _MobileScreenState extends State<MobileScreen> {
   ];
   @override
   void initState() {
-    _startAutoScroll();
+    // _startAutoScroll(); // Removed
     super.initState();
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
-    _animationController.dispose();
+    // _animationController.dispose(); // Removed
     super.dispose();
   }
 
@@ -151,163 +131,167 @@ class _MobileScreenState extends State<MobileScreen> {
       backgroundColor: const Color(0xff11071F),
       drawer: Drawer(
         backgroundColor: const Color(0xff1A0B2E),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 40,
-            children: [
-              const Center(
-                child: Text(
+        child: SafeArea(
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 40,
+              children: [
+                const Text(
                   'Portfolio',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'Preahvihear',
-                    fontSize: 28,
+                    fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
                 ),
-              ),
-              Divider(
-                thickness: 1,
-                color: Colors.grey.shade400,
-              ),
-              InkWell(
-                onTap: () {
-                  scrollToSection(homeKey);
-                  Navigator.pop(context);
-                },
-                child: const AutoSizeText(
-                  'Home',
-                  style: TextStyle(
-                    fontFamily: 'Preahvihear',
-                    fontSize: 17.5,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
+                Divider(
+                  thickness: 1,
+                  color: Colors.grey.shade400,
+                ),
+                InkWell(
+                  onTap: () {
+                    scrollToSection(homeKey);
+                    Navigator.pop(context);
+                  },
+                  child: const AutoSizeText(
+                    'Home',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Preahvihear',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
-              InkWell(
-                onTap: () {
-                  scrollToSection(experienceKey);
-                  Navigator.pop(context);
-                },
-                child: const AutoSizeText(
-                  'Work Experience',
-                  style: TextStyle(
-                    fontFamily: 'Preahvihear',
-                    fontSize: 17.5,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
+                InkWell(
+                  onTap: () {
+                    scrollToSection(experienceKey);
+                    Navigator.pop(context);
+                  },
+                  child: const AutoSizeText(
+                    'Work Experience',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Preahvihear',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
-              InkWell(
-                onTap: () {
-                  scrollToSection(technlogiesKey);
-                  Navigator.pop(context);
-                },
-                child: const AutoSizeText(
-                  'Skills',
-                  style: TextStyle(
-                    fontFamily: 'Preahvihear',
-                    fontSize: 17.5,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
+                InkWell(
+                  onTap: () {
+                    scrollToSection(technlogiesKey);
+                    Navigator.pop(context);
+                  },
+                  child: const AutoSizeText(
+                    'Skills',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Preahvihear',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
-              InkWell(
-                onTap: () {
-                  scrollToSection(projectKey);
-                  Navigator.pop(context);
-                },
-                child: const AutoSizeText(
-                  'Projects',
-                  style: TextStyle(
-                    fontFamily: 'Preahvihear',
-                    fontSize: 17.5,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
+                InkWell(
+                  onTap: () {
+                    scrollToSection(projectKey);
+                    Navigator.pop(context);
+                  },
+                  child: const AutoSizeText(
+                    'Projects',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Preahvihear',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
-              InkWell(
-                onTap: () {
-                  scrollToSection(aboutKey);
-                  Navigator.pop(context);
-                },
-                child: const AutoSizeText(
-                  'Contact',
-                  style: TextStyle(
-                    fontFamily: 'Preahvihear',
-                    fontSize: 17.5,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
+                InkWell(
+                  onTap: () {
+                    scrollToSection(aboutKey);
+                    Navigator.pop(context);
+                  },
+                  child: const AutoSizeText(
+                    'Contact',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Preahvihear',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
       body: CustomScrollView(
         slivers: [
-          const SliverAppBar(
+          SliverAppBar(
             expandedHeight: 60,
             pinned: true,
-
-            backgroundColor: Color(0xff1A0B2E),
-            // centerTitle: true,
-            // title: Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   spacing: 150,
-            //   children: [
-            //     InkWell(
-            //       onTap: () {
-            //         scrollToSection(homeKey);
-            //       },
-            //       child: const AutoSizeText(
-            //         'Home',
-            //         style: TextStyle(
-            //           fontFamily: 'Preahvihear',
-            //           fontSize: 17.5,
-            //           fontWeight: FontWeight.w400,
-            //           color: Colors.white,
-            //         ),
-            //       ),
-            //     ),
-            //     InkWell(
-            //       onTap: () {
-            //         scrollToSection(aboutKey);
-            //       },
-            //       child: const AutoSizeText(
-            //         'About',
-            //         style: TextStyle(
-            //           fontFamily: 'Preahvihear',
-            //           fontSize: 17.5,
-            //           fontWeight: FontWeight.w400,
-            //           color: Colors.white,
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
+            backgroundColor: const Color(0xff1A0B2E),
+            leading: Builder(
+              builder: (context) {
+                return GestureDetector(
+                  onTap: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.sort_rounded,
+                        color: Colors.white,
+                        size: 22,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+            centerTitle: true,
+            title: const AutoSizeText(
+              'Harish Panneerselvam',
+              style: TextStyle(
+                fontFamily: 'Preahvihear',
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
+            ),
           ),
           SliverFillRemaining(
             child: SingleChildScrollView(
               controller: _scrollController,
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 100),
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 50),
                 child: Column(
                   key: homeKey,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
                       child: Container(
-                        height: 300,
-                        width: 300,
+                        height: 200,
+                        width: 200,
                         decoration: BoxDecoration(
                           gradient: const RadialGradient(
                             colors: [
@@ -324,40 +308,13 @@ class _MobileScreenState extends State<MobileScreen> {
                           child: Image.asset(
                             'assets/png/profile.jpg',
                             fit: BoxFit.contain,
-                            height: 100,
-                            width: 100,
+                            height: 50,
+                            width: 50,
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 30),
-                    const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        AutoSizeText(
-                          "Hello! I Am",
-                          style: TextStyle(
-                            fontFamily: 'Preahvihear',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        AutoSizeText(
-                          "Harish Panneerselvam",
-                          style: TextStyle(
-                            fontFamily: 'Preahvihear',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 22,
-                            color: Color(0xff7127BA),
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 50),
                     const AutoSizeText(
                       'A Developer who',
                       style: TextStyle(
@@ -373,29 +330,30 @@ class _MobileScreenState extends State<MobileScreen> {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: 'understands Flutter turns ideas,\n',
+                            text:
+                                'builds cross-platform mobile applications with\n',
                             style: TextStyle(
                               fontFamily: 'Preahvihear',
                               fontWeight: FontWeight.w500,
-                              fontSize: 20,
+                              fontSize: 10,
                               color: Colors.white,
                             ),
                           ),
-                          // TextSpan(
-                          //   text: '— Flutter’s magic ',
-                          //   style: TextStyle(
-                          //     fontFamily: 'Preahvihear',
-                          //     fontWeight: FontWeight.w500,
-                          //     fontSize: 25,
-                          //     color: Colors.white,
-                          //   ),
-                          // ),
                           TextSpan(
-                            text: 'into smooth experiences',
+                            text: 'smooth experiences using ',
                             style: TextStyle(
                               fontFamily: 'Preahvihear',
                               fontWeight: FontWeight.w500,
-                              fontSize: 20,
+                              fontSize: 10,
+                              color: Colors.white,
+                            ),
+                          ),
+                          TextSpan(
+                            text: 'Flutter and Dart',
+                            style: TextStyle(
+                              fontFamily: 'Preahvihear',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 10,
                               color: Color(0xff7127BA),
                             ),
                           ),
@@ -404,7 +362,7 @@ class _MobileScreenState extends State<MobileScreen> {
                             style: TextStyle(
                               fontFamily: 'Preahvihear',
                               fontWeight: FontWeight.w500,
-                              fontSize: 30,
+                              fontSize: 10,
                               color: Colors.white,
                             ),
                           ),
@@ -423,11 +381,11 @@ class _MobileScreenState extends State<MobileScreen> {
                     ),
                     const SizedBox(height: 40),
                     const AutoSizeText(
-                      "I am a self-taught Flutter developer  with 1+ years in the industry. My focus is on crafting meaningful and delightful digital products that establish an equilibrium between user needs and business objectives. I specialize in building user-friendly, responsive, and high-performance applications.",
+                      "I am a Flutter Developer with over 1 year of experience. I focus on crafting meaningful digital products that balance user needs with business goals, specializing in user-friendly, responsive, and high-performance applications.",
                       style: TextStyle(
                         fontFamily: 'Preahvihear',
                         fontWeight: FontWeight.w500,
-                        fontSize: 15,
+                        fontSize: 10,
                         color: Colors.white,
                       ),
                     ),
@@ -440,7 +398,7 @@ class _MobileScreenState extends State<MobileScreen> {
                       style: TextStyle(
                         fontFamily: 'Preahvihear',
                         fontWeight: FontWeight.w500,
-                        fontSize: 25,
+                        fontSize: 18,
                         color: Colors.white,
                       ),
                     ),
@@ -469,40 +427,56 @@ class _MobileScreenState extends State<MobileScreen> {
                               children: [
                                 Image.asset(
                                   'assets/png/company-image.png',
-                                  height: 30,
+                                  height: 25,
                                 ),
                                 const SizedBox(width: 15),
 
                                 // Left text
                                 const Expanded(
                                   flex: 6,
-                                  child: AutoSizeText(
-                                    'I am working at Lentera Technologies Private Limited',
-                                    style: TextStyle(
-                                      fontFamily: 'poppins-medium',
-                                      fontSize: 13.5,
-                                      fontWeight: FontWeight.w500,
-                                      overflow: TextOverflow.visible,
-                                    ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    spacing: 8,
+                                    children: [
+                                      AutoSizeText(
+                                        'I am working at Lentera Technologies Private Limited',
+                                        style: TextStyle(
+                                          fontFamily: 'poppins-medium',
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w500,
+                                          overflow: TextOverflow.visible,
+                                        ),
+                                      ),
+                                      AutoSizeText(
+                                        '- Sept 2024 - Present',
+                                        style: TextStyle(
+                                          fontFamily: 'poppins-medium',
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          overflow: TextOverflow.visible,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
 
-                                // Pushes the date to the right
-                                const Spacer(),
+                                // // Pushes the date to the right
+                                // const Spacer(),
 
-                                // Right text
-                                const Flexible(
-                                  flex: 2,
-                                  child: AutoSizeText(
-                                    'Sept 2024 - Present',
-                                    style: TextStyle(
-                                      fontFamily: 'poppins-medium',
-                                      fontSize: 13.5,
-                                      fontWeight: FontWeight.w500,
-                                      overflow: TextOverflow.visible,
-                                    ),
-                                  ),
-                                ),
+                                // // Right text
+                                // const Flexible(
+                                //   flex: 2,
+                                //   child: AutoSizeText(
+                                //     'Sept 2024 - Present',
+                                //     style: TextStyle(
+                                //       fontFamily: 'poppins-medium',
+                                //       fontSize: 12,
+                                //       fontWeight: FontWeight.w500,
+                                //       overflow: TextOverflow.visible,
+                                //     ),
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),
@@ -566,11 +540,11 @@ class _MobileScreenState extends State<MobileScreen> {
                     ),
                     const SizedBox(height: 30),
                     const AutoSizeText(
-                      'Studies',
+                      'Education',
                       style: TextStyle(
                         fontFamily: 'Preahvihear',
                         fontWeight: FontWeight.w500,
-                        fontSize: 25,
+                        fontSize: 18,
                         color: Colors.white,
                       ),
                     ),
@@ -596,40 +570,55 @@ class _MobileScreenState extends State<MobileScreen> {
                           children: [
                             Image.asset(
                               'assets/png/college-image.png',
-                              height: 50,
+                              height: 25,
                             ),
                             const SizedBox(width: 15),
 
                             // Left text
                             const Expanded(
                               flex: 5,
-                              child: AutoSizeText(
-                                'SRM Valliammai Engineering College B.E Computer Science and Engineering',
-                                style: TextStyle(
-                                  fontFamily: 'poppins-medium',
-                                  fontSize: 13.5,
-                                  fontWeight: FontWeight.w500,
-                                  overflow: TextOverflow.visible,
-                                ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                spacing: 8,
+                                children: [
+                                  AutoSizeText(
+                                    'SRM Valliammai Engineering College B.E Computer Science and Engineering',
+                                    style: TextStyle(
+                                      fontFamily: 'poppins-medium',
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w500,
+                                      overflow: TextOverflow.visible,
+                                    ),
+                                  ),
+                                  AutoSizeText(
+                                    '- July 2019 - May 2023',
+                                    style: TextStyle(
+                                      fontFamily: 'poppins-medium',
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w500,
+                                      overflow: TextOverflow.visible,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
 
-                            // Pushes the date to the right
-                            const Spacer(),
+                            // // Pushes the date to the right
+                            // const Spacer(),
 
-                            // Right text
-                            const Flexible(
-                              flex: 2,
-                              child: AutoSizeText(
-                                'July 2019 - May 2023',
-                                style: TextStyle(
-                                  fontFamily: 'poppins-medium',
-                                  fontSize: 13.5,
-                                  fontWeight: FontWeight.w500,
-                                  overflow: TextOverflow.visible,
-                                ),
-                              ),
-                            ),
+                            // // Right text
+                            // const Flexible(
+                            //   flex: 2,
+                            //   child: AutoSizeText(
+                            //     'July 2019 - May 2023',
+                            //     style: TextStyle(
+                            //       fontFamily: 'poppins-medium',
+                            //       fontSize: 14,
+                            //       fontWeight: FontWeight.w500,
+                            //       overflow: TextOverflow.visible,
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -643,20 +632,17 @@ class _MobileScreenState extends State<MobileScreen> {
                       style: TextStyle(
                         fontFamily: 'Preahvihear',
                         fontWeight: FontWeight.w500,
-                        fontSize: 30,
+                        fontSize: 18,
                         color: Colors.white,
                       ),
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 30),
                     SizedBox(
                       height: 120,
-                      child: ListView.builder(
-                        controller: _animationController,
-                        scrollDirection: Axis.horizontal,
-                        physics: const AlwaysScrollableScrollPhysics(),
+                      child: AutoScrollList(
                         itemCount: techStacks.length,
                         itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
                           child: Row(
                             spacing: 20,
                             children: [
@@ -671,7 +657,7 @@ class _MobileScreenState extends State<MobileScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 50,
+                      height: 40,
                       key: projectKey,
                     ),
                     Column(
@@ -680,11 +666,11 @@ class _MobileScreenState extends State<MobileScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const AutoSizeText(
-                              'Projects',
+                              'Project',
                               style: TextStyle(
                                 fontFamily: 'poppins-semiBold',
                                 fontWeight: FontWeight.w500,
-                                fontSize: 12,
+                                fontSize: 10,
                                 color: Color(0xff7127BA),
                               ),
                             ),
@@ -693,7 +679,7 @@ class _MobileScreenState extends State<MobileScreen> {
                               style: TextStyle(
                                 fontFamily: 'poppins-semiBold',
                                 fontWeight: FontWeight.w500,
-                                fontSize: 15,
+                                fontSize: 12,
                                 color: Colors.white,
                               ),
                             ),
@@ -705,16 +691,16 @@ class _MobileScreenState extends State<MobileScreen> {
                                     'I built a responsive design for both Android and iOS applications for customer and installer sides using the Flutter framework. I implemented REST API integrations to support real-time data flow and improve app responsiveness. I integrated Firebase Cloud Messaging (FCM) for push notifications and real-time alerts. I focused on performance optimization, error handling, and ensuring smooth UI transitions. '),
                           ],
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 20),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             const AutoSizeText(
-                              'Projects',
+                              'Project',
                               style: TextStyle(
                                 fontFamily: 'poppins-semiBold',
                                 fontWeight: FontWeight.w500,
-                                fontSize: 12,
+                                fontSize: 10,
                                 color: Color(0xff7127BA),
                               ),
                             ),
@@ -723,7 +709,7 @@ class _MobileScreenState extends State<MobileScreen> {
                               style: TextStyle(
                                 fontFamily: 'poppins-semiBold',
                                 fontWeight: FontWeight.w500,
-                                fontSize: 15,
+                                fontSize: 12,
                                 color: Colors.white,
                               ),
                             ),
@@ -774,16 +760,16 @@ class _MobileScreenState extends State<MobileScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 50),
+                        const SizedBox(height: 40),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             const AutoSizeText(
-                              'Projects',
+                              'Project',
                               style: TextStyle(
                                 fontFamily: 'poppins-semiBold',
                                 fontWeight: FontWeight.w500,
-                                fontSize: 12,
+                                fontSize: 10,
                                 color: Color(0xff7127BA),
                               ),
                             ),
@@ -792,7 +778,7 @@ class _MobileScreenState extends State<MobileScreen> {
                               style: TextStyle(
                                 fontFamily: 'poppins-semiBold',
                                 fontWeight: FontWeight.w500,
-                                fontSize: 13,
+                                fontSize: 12,
                                 color: Colors.white,
                               ),
                             ),
@@ -824,14 +810,14 @@ class _MobileScreenState extends State<MobileScreen> {
                       style: const TextStyle(
                         fontFamily: 'Preahvihear',
                         fontWeight: FontWeight.w500,
-                        fontSize: 25,
+                        fontSize: 18,
                         color: Colors.white,
                       ),
                     ),
                     const SizedBox(height: 20),
                     GestureDetector(
                       onTap: () {
-                        openGmailWeb(toEmail: 'harishselvampanneer@gmail.com');
+                        _launchMailURL();
                       },
                       child: Row(
                         spacing: 5,
@@ -839,21 +825,21 @@ class _MobileScreenState extends State<MobileScreen> {
                           Image.asset(
                             'assets/png/mail.png',
                             color: Colors.white,
-                            height: 15,
+                            height: 16,
                           ),
                           const AutoSizeText(
                             'harishselvampanneer@gmail.com',
                             style: TextStyle(
                               fontFamily: 'Preahvihear',
                               fontWeight: FontWeight.w500,
-                              fontSize: 13,
+                              fontSize: 12,
                               color: Colors.white,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 20),
                     Row(
                       spacing: 20,
                       children: [
@@ -871,7 +857,7 @@ class _MobileScreenState extends State<MobileScreen> {
                         socialIcon(
                           tooltipMessage: 'Resume',
                           image: 'assets/png/resume.png',
-                          onTap: () => _launchURL('https://github.com/harshq0'),
+                          onTap: () => _downloadResume(),
                         ),
                       ],
                     ),
@@ -902,7 +888,7 @@ class _MobileScreenState extends State<MobileScreen> {
           children: [
             Image.asset(
               image,
-              height: 50,
+              height: 25,
             ),
             Expanded(
               flex: 3,
@@ -910,7 +896,7 @@ class _MobileScreenState extends State<MobileScreen> {
                 text,
                 style: const TextStyle(
                   fontFamily: 'poppins-medium',
-                  fontSize: 13.5,
+                  fontSize: 10,
                   fontWeight: FontWeight.w500,
                   overflow: TextOverflow.fade,
                 ),
@@ -952,7 +938,7 @@ class _MobileScreenState extends State<MobileScreen> {
                   text,
                   style: const TextStyle(
                     fontFamily: 'poppins-medium',
-                    fontSize: 16.5,
+                    fontSize: 10,
                     fontWeight: FontWeight.w500,
                     overflow: TextOverflow.visible,
                   ),
@@ -961,7 +947,7 @@ class _MobileScreenState extends State<MobileScreen> {
                   text: TextSpan(
                     style: const TextStyle(
                       fontFamily: 'poppins-medium',
-                      fontSize: 14,
+                      fontSize: 10,
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
                     ),
@@ -970,7 +956,7 @@ class _MobileScreenState extends State<MobileScreen> {
                         text: 'Technologies Used : $technologiesText ',
                         style: const TextStyle(
                           fontFamily: 'poppins-medium',
-                          fontSize: 15,
+                          fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
                         ),
@@ -979,7 +965,7 @@ class _MobileScreenState extends State<MobileScreen> {
                         alignment: PlaceholderAlignment.middle,
                         child: Image.asset(
                           'assets/png/arrow_point.png',
-                          height: 15,
+                          height: 10,
                         ),
                       ),
                     ],
@@ -996,7 +982,7 @@ class _MobileScreenState extends State<MobileScreen> {
                                 'Live :',
                                 style: TextStyle(
                                   fontFamily: 'poppins-medium',
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -1006,7 +992,7 @@ class _MobileScreenState extends State<MobileScreen> {
                                 child: AutoSizeText(liveUrl,
                                     style: const TextStyle(
                                       fontFamily: 'poppins-medium',
-                                      fontSize: 14,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.w500,
                                       overflow: TextOverflow.visible,
                                       decoration: TextDecoration.underline,
@@ -1023,7 +1009,7 @@ class _MobileScreenState extends State<MobileScreen> {
                                 'Live :',
                                 style: TextStyle(
                                   fontFamily: 'poppins-medium',
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -1033,7 +1019,7 @@ class _MobileScreenState extends State<MobileScreen> {
                                 child: AutoSizeText(liveUrlIos,
                                     style: const TextStyle(
                                       fontFamily: 'poppins-medium',
-                                      fontSize: 14,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.w500,
                                       overflow: TextOverflow.visible,
                                       decoration: TextDecoration.underline,
@@ -1068,7 +1054,7 @@ class _MobileScreenState extends State<MobileScreen> {
         onTap: onTap,
         child: Image.asset(
           image,
-          height: 18,
+          height: 16,
           color: Colors.white,
         ),
       ),
@@ -1082,8 +1068,8 @@ Widget techStack(
     spacing: 10,
     children: [
       Container(
-        height: 60,
-        width: 60,
+        height: 50,
+        width: 50,
         decoration: BoxDecoration(
           border: Border.all(color: const Color.fromARGB(96, 200, 200, 200)),
           color: const Color.fromARGB(255, 176, 176, 176).withOpacity(0.1),
@@ -1093,14 +1079,14 @@ Widget techStack(
           child: SvgPicture.asset(
             imagePath,
             color: color,
-            height: 30,
+            height: 25,
           ),
         ),
       ),
       Text(title,
           style: const TextStyle(
             fontFamily: 'poppins-medium',
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: FontWeight.w500,
             overflow: TextOverflow.visible,
           )),

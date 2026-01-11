@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -6,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:harish_portfolio/constant.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:harish_portfolio/Components/auto_scroll_list.dart';
+import 'package:universal_html/html.dart' as html;
 
 class DesktopScreen extends StatefulWidget {
   const DesktopScreen({super.key});
@@ -17,8 +18,8 @@ class DesktopScreen extends StatefulWidget {
 class _DesktopScreenState extends State<DesktopScreen>
     with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
-  final ScrollController _animationController = ScrollController();
-  Timer? _timer;
+  // final ScrollController _animationController = ScrollController(); // Removed
+  // Timer? _timer; // Removed
   final GlobalKey homeKey = GlobalKey();
   final GlobalKey experienceKey = GlobalKey();
   final GlobalKey skillKey = GlobalKey();
@@ -27,23 +28,32 @@ class _DesktopScreenState extends State<DesktopScreen>
   String appTitle = 'Home';
   void _launchURL(String url) async {
     if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
       throw 'Could not launch $url';
     }
   }
 
-  void _launchMailURL(String url) async {
+  Future<void> _launchMailURL() async {
     final Uri emailLaunchUri = Uri(
       scheme: 'mailto',
       path: 'harishselvampanneer@gmail.com',
     );
 
-    if (await canLaunchUrl(emailLaunchUri)) {
-      await launchUrl(emailLaunchUri);
-    } else {
-      throw 'Could not launch $url';
+    try {
+      if (!await launchUrl(emailLaunchUri)) {
+        throw 'Could not launch email';
+      }
+    } catch (e) {
+      debugPrint(e.toString());
     }
+  }
+
+  void _downloadResume() {
+    html.AnchorElement anchorElement =
+        html.AnchorElement(href: 'assets/harish_resume.pdf');
+    anchorElement.download = "Harish_Resume.pdf";
+    anchorElement.click();
   }
 
   void scrollToSection(GlobalKey key) {
@@ -55,25 +65,6 @@ class _DesktopScreenState extends State<DesktopScreen>
         curve: Curves.easeInOut,
       );
     }
-  }
-
-  void _startAutoScroll() {
-    const double speed = 0.5;
-    const int tick = 16;
-
-    _timer = Timer.periodic(const Duration(milliseconds: tick), (_) {
-      if (!_animationController.hasClients) return;
-
-      double next = _animationController.offset + speed;
-      double max = _animationController.position.maxScrollExtent;
-
-      // When end reached → restart from beginning
-      if (next >= max) {
-        _animationController.jumpTo(0); // go back to first item
-      } else {
-        _animationController.jumpTo(next);
-      }
-    });
   }
 
   void _onScroll() {
@@ -109,32 +100,6 @@ class _DesktopScreenState extends State<DesktopScreen>
       if (appTitle != 'Contact') {
         setState(() => appTitle = 'Contact');
       }
-    }
-  }
-
-  Future<void> openGmailWeb({
-    required String toEmail,
-  }) async {
-    // Build body with extra details
-    const String fullBody = """
-
-""";
-
-    final Uri gmailUrl = Uri.parse(
-      'https://mail.google.com/mail/?view=cm&fs=1'
-      '&to=$toEmail'
-      '&body=${Uri.encodeComponent(fullBody)}',
-    );
-
-    if (await canLaunchUrl(gmailUrl)) {
-      await launchUrl(gmailUrl, mode: LaunchMode.externalApplication);
-      // emailController.clear();
-      // nameController.clear();
-      // contactController.clear();
-      // descriptionController.clear();
-      // bodyController.clear();
-    } else {
-      throw '❌ Could not open Gmail';
     }
   }
 
@@ -184,14 +149,14 @@ class _DesktopScreenState extends State<DesktopScreen>
   @override
   void initState() {
     super.initState();
-    _startAutoScroll();
+    // _startAutoScroll(); // Removed
     _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
-    _animationController.dispose();
+    // _animationController.dispose(); // Removed
     super.dispose();
   }
 
@@ -333,7 +298,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                       // Arrow pointer
                       Positioned(
                         top: 20,
-                        left: 500,
+                        left: 520,
                         child: Image.asset(
                           'assets/png/arrow-pointer.png',
                           height: 50,
@@ -343,7 +308,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                       // Developer Intro Text
                       const Padding(
                         padding: EdgeInsets.only(
-                            top: 100.0, left: 550.0, right: 300.0),
+                            top: 100.0, left: 600.0, right: 300.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -357,34 +322,34 @@ class _DesktopScreenState extends State<DesktopScreen>
                               ),
                             ),
                             SizedBox(height: 15),
-                            AutoSizeText.rich(
+                            const AutoSizeText.rich(
                               TextSpan(
                                 children: [
                                   TextSpan(
                                     text:
-                                        'understands Flutter turns ideas into,\n',
+                                        'builds cross-platform mobile applications with\n',
                                     style: TextStyle(
                                       fontFamily: 'Preahvihear',
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 30,
+                                      fontSize: 25,
                                       color: Colors.white,
                                     ),
                                   ),
-                                  // TextSpan(
-                                  //   text: 'Responsive with ',
-                                  //   style: TextStyle(
-                                  //     fontFamily: 'Preahvihear',
-                                  //     fontWeight: FontWeight.w500,
-                                  //     fontSize: 30,
-                                  //     color: Colors.white,
-                                  //   ),
-                                  // ),
                                   TextSpan(
-                                    text: 'smooth experiences',
+                                    text: 'smooth experiences using ',
                                     style: TextStyle(
                                       fontFamily: 'Preahvihear',
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 30,
+                                      fontSize: 25,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: 'Flutter and Dart',
+                                    style: TextStyle(
+                                      fontFamily: 'Preahvihear',
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 25,
                                       color: Color(0xff7127BA),
                                     ),
                                   ),
@@ -393,7 +358,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                                     style: TextStyle(
                                       fontFamily: 'Preahvihear',
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 30,
+                                      fontSize: 25,
                                       color: Colors.white,
                                     ),
                                   ),
@@ -461,11 +426,11 @@ class _DesktopScreenState extends State<DesktopScreen>
                       children: [
                         // const SizedBox(height: 70),
                         const AutoSizeText(
-                            "I am a self-taught Flutter developer  with 1+ years in the industry. My focus is on crafting meaningful and delightful digital products that establish an equilibrium between user needs and business objectives. I specialize in building user-friendly, responsive, and high-performance applications.",
+                            "I am a Flutter Developer with over 1 year of experience. I focus on crafting meaningful digital products that balance user needs with business goals, specializing in user-friendly, responsive, and high-performance applications.",
                             style: TextStyle(
                               fontFamily: 'Preahvihear',
                               fontWeight: FontWeight.w500,
-                              fontSize: 18,
+                              fontSize: 20,
                               color: Colors.white,
                             )),
                         const SizedBox(height: 100),
@@ -474,7 +439,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                           style: TextStyle(
                             fontFamily: 'Preahvihear',
                             fontWeight: FontWeight.w500,
-                            fontSize: 30,
+                            fontSize: 32,
                             color: Colors.white,
                           ),
                         ),
@@ -632,11 +597,11 @@ class _DesktopScreenState extends State<DesktopScreen>
                         ),
                         const SizedBox(height: 50),
                         const AutoSizeText(
-                          'Studies',
+                          'Education',
                           style: TextStyle(
                             fontFamily: 'Preahvihear',
                             fontWeight: FontWeight.w500,
-                            fontSize: 30,
+                            fontSize: 32,
                             color: Colors.white,
                           ),
                         ),
@@ -713,17 +678,14 @@ class _DesktopScreenState extends State<DesktopScreen>
                           style: TextStyle(
                             fontFamily: 'Preahvihear',
                             fontWeight: FontWeight.w500,
-                            fontSize: 30,
+                            fontSize: 32,
                             color: Colors.white,
                           ),
                         ),
                         const SizedBox(height: 40),
                         SizedBox(
                           height: 120,
-                          child: ListView.builder(
-                            controller: _animationController,
-                            scrollDirection: Axis.horizontal,
-                            physics: const AlwaysScrollableScrollPhysics(),
+                          child: AutoScrollList(
                             itemCount: techStacks.length,
                             itemBuilder: (context, index) => Padding(
                               padding:
@@ -833,7 +795,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const AutoSizeText(
-                              'Projects',
+                              'Project',
                               style: TextStyle(
                                 fontFamily: 'poppins-semiBold',
                                 fontWeight: FontWeight.w500,
@@ -888,7 +850,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             const AutoSizeText(
-                              'Projects',
+                              'Project',
                               style: TextStyle(
                                 fontFamily: 'poppins-semiBold',
                                 fontWeight: FontWeight.w500,
@@ -971,7 +933,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const AutoSizeText(
-                              'Projects',
+                              'Project',
                               style: TextStyle(
                                 fontFamily: 'poppins-semiBold',
                                 fontWeight: FontWeight.w500,
@@ -1068,15 +1030,14 @@ class _DesktopScreenState extends State<DesktopScreen>
                           style: const TextStyle(
                             fontFamily: 'Preahvihear',
                             fontWeight: FontWeight.w500,
-                            fontSize: 30,
+                            fontSize: 32,
                             color: Colors.white,
                           ),
                         ),
                         const SizedBox(height: 20),
                         GestureDetector(
                           onTap: () {
-                            openGmailWeb(
-                                toEmail: 'harishselvampanneer@gmail.com');
+                            _launchMailURL();
                           },
                           child: Row(
                             spacing: 5,
@@ -1117,8 +1078,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                             socialIcon(
                               tooltipMessage: 'Resume',
                               image: 'assets/png/resume.png',
-                              onTap: () =>
-                                  _launchURL('https://github.com/harshq0'),
+                              onTap: () => _downloadResume(),
                             ),
                           ],
                         ),
@@ -1161,7 +1121,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                   text,
                   style: const TextStyle(
                     fontFamily: 'poppins-medium',
-                    fontSize: 16.5,
+                    fontSize: 18,
                     fontWeight: FontWeight.w500,
                     overflow: TextOverflow.fade,
                   ),

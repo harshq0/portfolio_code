@@ -354,7 +354,7 @@ class _TabletScreenState extends State<TabletScreen> {
                     ),
                     const SizedBox(height: 40),
                     const AutoSizeText(
-                      "I am a Flutter Developer with over 1 year of experience. I focus on crafting meaningful digital products that balance user needs with business goals, specializing in user-friendly, responsive, and high-performance applications.",
+                      "I am a Flutter Developer with over 1.5+ year of experience. I focus on crafting meaningful digital products that balance user needs with business goals, specializing in user-friendly, responsive, and high-performance applications.",
                       style: TextStyle(
                         fontFamily: 'Preahvihear',
                         fontWeight: FontWeight.w500,
@@ -793,8 +793,8 @@ class _TabletScreenState extends State<TabletScreen> {
                             const SizedBox(height: 30),
                             projectContainer(
                               liveOnTap: () async {
-                                final Uri url = Uri.parse(
-                                    'https://harshq0.github.io/zuvonne_website/');
+                                final Uri url =
+                                    Uri.parse('https://zuvonne.com/');
                                 if (await canLaunchUrl(url)) {
                                   await launchUrl(url,
                                       mode: LaunchMode.externalApplication);
@@ -825,7 +825,6 @@ class _TabletScreenState extends State<TabletScreen> {
                                   techUsed(text: 'Dart'),
                                 ],
                               ),
-                              // technologiesText: 'Flutter, Dart.',
                               text:
                                   'I have build a responsive website for desktop, tablet, and mobile using the Flutter framework. With a email sending feature, users can easily reach out for inquiries or support. The website is designed to provide a seamless user experience across all devices, ensuring accessibility and engagement for all visitors.',
                             ),
@@ -944,7 +943,6 @@ class _TabletScreenState extends State<TabletScreen> {
 
   Widget projectContainer({
     required String text,
-    // required String technologiesText,
     double? width,
     Widget? projectImage,
     required Widget technologiesUsed,
@@ -996,34 +994,6 @@ class _TabletScreenState extends State<TabletScreen> {
                         ),
                       ),
                       technologiesUsed,
-                      // RichText(
-                      //   text: TextSpan(
-                      //     style: const TextStyle(
-                      //       fontFamily: 'poppins-medium',
-                      //       fontSize: 14,
-                      //       fontWeight: FontWeight.w500,
-                      //       color: Colors.white,
-                      //     ),
-                      //     children: [
-                      //       TextSpan(
-                      //         text: 'Technologies Used : $technologiesText ',
-                      //         style: const TextStyle(
-                      //           fontFamily: 'poppins-medium',
-                      //           fontSize: 13,
-                      //           fontWeight: FontWeight.w500,
-                      //           color: Colors.white,
-                      //         ),
-                      //       ),
-                      //       WidgetSpan(
-                      //         alignment: PlaceholderAlignment.middle,
-                      //         child: Image.asset(
-                      //           'assets/png/arrow_point.png',
-                      //           height: 15,
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
                       Column(
                         spacing: 5,
                         children: [
@@ -1137,7 +1107,7 @@ Widget _appBarTitle(
           title,
           style: TextStyle(
             fontFamily: 'Preahvihear',
-            fontSize: 17.5,
+            fontSize: compare == title ? 14.5 : 12.5,
             fontWeight: compare == title ? FontWeight.w800 : FontWeight.w400,
             color: compare == title ? Colors.black : Colors.white,
           ),
@@ -1147,28 +1117,6 @@ Widget _appBarTitle(
   );
 }
 
-// Widget _skillDetails({required String image, required String name}) {
-//   return Row(spacing: 10, children: [
-//     SizedBox(
-//       height: 50,
-//       width: 50,
-//       child: Center(
-//         child: Image.asset(
-//           'assets/png/$image.png',
-//           height: 35,
-//         ),
-//       ),
-//     ),
-//     Text(
-//       name,
-//       style: const TextStyle(
-//           fontFamily: 'poppins-semiBold',
-//           fontWeight: FontWeight.w500,
-//           fontSize: 20,
-//           color: Colors.white),
-//     ),
-//   ]);
-// }
 Widget techUsed({required String text}) {
   return Container(
     decoration: BoxDecoration(

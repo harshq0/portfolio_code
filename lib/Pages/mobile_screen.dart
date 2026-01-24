@@ -375,7 +375,7 @@ class _MobileScreenState extends State<MobileScreen> {
                     ),
                     const SizedBox(height: 40),
                     const AutoSizeText(
-                      "I am a Flutter Developer with over 1 year of experience. I focus on crafting meaningful digital products that balance user needs with business goals, specializing in user-friendly, responsive, and high-performance applications.",
+                      "I am a Flutter Developer with over 1.5+ year of experience. I focus on crafting meaningful digital products that balance user needs with business goals, specializing in user-friendly, responsive, and high-performance applications.",
                       style: TextStyle(
                         fontFamily: 'Preahvihear',
                         fontWeight: FontWeight.w500,
@@ -709,28 +709,6 @@ class _MobileScreenState extends State<MobileScreen> {
                             ),
                             const SizedBox(height: 15),
                             projectContainer(
-                              // liveOnTap: () async {
-                              //   final Uri url = Uri.parse(
-                              //       'https://play.google.com/store/apps/details?id=com.henkel.DigitalPresenter.Android');
-                              //   if (await canLaunchUrl(url)) {
-                              //     await launchUrl(url,
-                              //         mode: LaunchMode.externalApplication);
-                              //   } else {
-                              //     throw 'Could not launch $url';
-                              //   }
-                              // },
-                              // liveOnTapIos: () async {
-                              //   final Uri url = Uri.parse(
-                              //       'https://apps.apple.com/in/app/henkel-digital-presenter/id1563799427');
-                              //   if (await canLaunchUrl(url)) {
-                              //     await launchUrl(url,
-                              //         mode: LaunchMode.externalApplication);
-                              //   } else {
-                              //     throw 'Could not launch $url';
-                              //   }
-                              // },
-                              // liveUrl: 'Android mobile app',
-                              // liveUrlIos: 'Ios mobile app',
                               width: globalWidth,
                               projectImage: Container(
                                 decoration: BoxDecoration(
@@ -756,7 +734,7 @@ class _MobileScreenState extends State<MobileScreen> {
                         ),
                         const SizedBox(height: 40),
                         Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const AutoSizeText(
                               'Project',
@@ -779,8 +757,8 @@ class _MobileScreenState extends State<MobileScreen> {
                             const SizedBox(height: 15),
                             projectContainer(
                               liveOnTap: () async {
-                                final Uri url = Uri.parse(
-                                    'https://harshq0.github.io/zuvonne_website/');
+                                final Uri url =
+                                    Uri.parse('https://zuvonne.com/');
                                 if (await canLaunchUrl(url)) {
                                   await launchUrl(url,
                                       mode: LaunchMode.externalApplication);

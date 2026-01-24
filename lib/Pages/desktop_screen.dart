@@ -373,44 +373,6 @@ class _DesktopScreenState extends State<DesktopScreen>
                       ),
                     ],
                   ),
-
-                  // const AutoSizeText(
-                  //   "I'm a Flutter Developer. |",
-                  //   style: TextStyle(
-                  //     wordSpacing: 5,
-                  //     fontFamily: 'Preahvihear',
-                  //     fontWeight: FontWeight.w500,
-                  //     fontSize: 35,
-                  //     color: Colors.white,
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 10),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     const AutoSizeText(
-                  //       "Currently, I'm a Flutter Developer at ",
-                  //       style: TextStyle(
-                  //         wordSpacing: 5,
-                  //         fontFamily: 'Preahvihear',
-                  //         fontWeight: FontWeight.w500,
-                  //         fontSize: 25,
-                  //         color: Colors.white,
-                  //       ),
-                  //     ),
-                  //     AutoSizeText(
-                  //       "Lentera Technologies Pvt. Ltd...",
-                  //       style: TextStyle(
-                  //         wordSpacing: 5,
-                  //         fontFamily: 'Preahvihear',
-                  //         fontWeight: FontWeight.w500,
-                  //         fontSize: 25,
-                  //         color: Colors.green.shade500,
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 200.0),
                     child: Column(
@@ -419,7 +381,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                       children: [
                         // const SizedBox(height: 70),
                         const AutoSizeText(
-                            "I am a Flutter Developer with over 1 year of experience. I focus on crafting meaningful digital products that balance user needs with business goals, specializing in user-friendly, responsive, and high-performance applications.",
+                            "I am a Flutter Developer with over 1.5+ year of experience. I focus on crafting meaningful digital products that balance user needs with business goals, specializing in user-friendly, responsive, and high-performance applications.",
                             style: TextStyle(
                               fontFamily: 'Preahvihear',
                               fontWeight: FontWeight.w500,
@@ -946,8 +908,8 @@ class _DesktopScreenState extends State<DesktopScreen>
                             const SizedBox(height: 30),
                             projectContainer(
                               liveOnTap: () async {
-                                final Uri url = Uri.parse(
-                                    'https://harshq0.github.io/zuvonne_website/');
+                                final Uri url =
+                                    Uri.parse('https://zuvonne.com/');
                                 if (await canLaunchUrl(url)) {
                                   await launchUrl(url,
                                       mode: LaunchMode.externalApplication);
@@ -1324,8 +1286,8 @@ Widget _appBarTitle(
           title,
           style: TextStyle(
             fontFamily: 'Preahvihear',
-            fontSize: 17.5,
-            fontWeight: FontWeight.w400,
+            fontSize: compare == title ? 17.5 : 14.5,
+            fontWeight: compare == title ? FontWeight.w600 : FontWeight.w400,
             color: compare == title ? Colors.black : Colors.white,
           ),
         ),

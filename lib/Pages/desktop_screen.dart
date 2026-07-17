@@ -37,7 +37,7 @@ class _DesktopScreenState extends State<DesktopScreen>
   Future<void> _launchMailURL() async {
     final Uri emailLaunchUri = Uri(
       scheme: 'mailto',
-      path: 'harishselvampanneer@gmail.com',
+      path: 'harishpanneerselvam5@gmail.com',
     );
 
     try {
@@ -381,7 +381,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                       children: [
                         // const SizedBox(height: 70),
                         const AutoSizeText(
-                            "I am a Flutter Developer with over 1.5+ year of experience. I focus on crafting meaningful digital products that balance user needs with business goals, specializing in user-friendly, responsive, and high-performance applications.",
+                            "I am a Flutter Developer with over 2 years of experience. I focus on crafting meaningful digital products that balance user needs with business goals, specializing in user-friendly, responsive, and high-performance applications.",
                             style: TextStyle(
                               fontFamily: 'Preahvihear',
                               fontWeight: FontWeight.w500,
@@ -434,7 +434,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                                     const Expanded(
                                       flex: 6,
                                       child: AutoSizeText(
-                                        'I am working at Lentera Technologies Private Limited',
+                                        'Flutter Developer at Lentera Technologies Private Limited',
                                         style: TextStyle(
                                           fontFamily: 'poppins-medium',
                                           fontSize: 16.5,
@@ -500,7 +500,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                                     ),
                                     image: 'assets/png/responsive-image.png',
                                     text:
-                                        'Developed and maintained  cross-platform mobile  applications using Flutter and Dart.'),
+                                        'Developed and maintained cross-platform mobile applications using Flutter and Dart.'),
                                 const Spacer(),
                                 experienceContainer(
                                     gradient: const LinearGradient(
@@ -514,7 +514,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                                     ),
                                     image: 'assets/png/api-image.png',
                                     text:
-                                        'Implemented REST API integrations  to support real-time data flow  and enhance appresponsiveness.')
+                                        'Implemented REST API integrations to support real-time data flow and enhance app responsiveness.')
                               ],
                             ),
                             Row(
@@ -531,7 +531,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                                     ),
                                     image: 'assets/png/notification-image.png',
                                     text:
-                                        'Integrated FCM  (Firebase Cloud Messaging) for  push notifications  and real-time alerts.'),
+                                        'Integrated FCM (Firebase Cloud Messaging) for push notifications and real-time alerts.'),
                                 const Spacer(),
                                 experienceContainer(
                                     gradient: const LinearGradient(
@@ -759,7 +759,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                               ),
                             ),
                             const AutoSizeText(
-                              'IOT Based Solar Panel Application',
+                              'IoT Based Solar Panel Application',
                               style: TextStyle(
                                 fontFamily: 'poppins-semiBold',
                                 fontWeight: FontWeight.w500,
@@ -790,14 +790,14 @@ class _DesktopScreenState extends State<DesktopScreen>
                                     techUsed(text: 'Dart'),
                                     techUsed(text: 'REST API'),
                                     techUsed(text: 'FCM'),
-                                    techUsed(text: 'Rasorpay'),
+                                    techUsed(text: 'Razorpay'),
                                   ],
                                 ),
                                 width: globalWidth * 0.43,
                                 // technologiesText:
                                 //     'Flutter, Dart, REST API, FCM, Rasorpay (Payment Gateway).',
                                 text:
-                                    'I built a responsive design for both Android and iOS applications for customer and installer sides using the Flutter framework. I implemented REST API integrations to support real-time data flow and improve app responsiveness. I integrated Firebase Cloud Messaging (FCM) for push notifications and real-time alerts. I focused on performance optimization, error handling, and ensuring smooth UI transitions. '),
+                                    'Built a responsive design for Android and iOS applications for both customer and installer platforms using the Flutter framework. Implemented REST API integrations to support real-time data flow and improve app responsiveness. Integrated Firebase Cloud Messaging (FCM) for push notifications and real-time alerts. Focused on performance optimization, error handling, and ensuring smooth UI transitions.'),
                           ],
                         ),
                         const SizedBox(height: 50),
@@ -814,7 +814,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                               ),
                             ),
                             const AutoSizeText(
-                              'Henkal Digital Presenter Application',
+                              'Henkel Digital Presenter Application',
                               style: TextStyle(
                                 fontFamily: 'poppins-semiBold',
                                 fontWeight: FontWeight.w500,
@@ -879,7 +879,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                               // technologiesText:
                               //     'Flutter, Dart, REST API, Provider(State Management),\nMVVM, Animations.',
                               text:
-                                  'Developed a digital application for sales and merchandising teams to view, manage, and present Henkel Beauty Care products across GCC retail stores. The app includes product details, brand visuals, features, benefits, barcodes, and must-stock lists, helping teams ensure brand consistency, planogram compliance, and effective in-store execution. It serves as a reference and presentation tool, enhancing efficiency and accuracy during store visits.The application is live on both Android and iOS.',
+                                  'Developed a digital application for sales and merchandising teams to view, manage, and present Henkel Beauty Care products across GCC retail stores. The app includes product details, brand visuals, features, benefits, barcodes, and must-stock lists, helping teams ensure brand consistency, planogram compliance, and effective in-store execution. It serves as a reference and presentation tool, enhancing efficiency and accuracy during store visits. The application is live on both Android and iOS.',
                             ),
                           ],
                         ),
@@ -897,7 +897,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                               ),
                             ),
                             const AutoSizeText(
-                              'Zuvonne(Website)',
+                              'Zuvonne (Website)',
                               style: TextStyle(
                                 fontFamily: 'poppins-semiBold',
                                 fontWeight: FontWeight.w500,
@@ -942,7 +942,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                               ),
                               // technologiesText: 'Flutter, Dart.',
                               text:
-                                  'I have build a responsive website for desktop, tablet, and mobile using the Flutter framework. With a email sending feature, users can easily reach out for inquiries or support. The website is designed to provide a seamless user experience across all devices, ensuring accessibility and engagement for all visitors.',
+                                  'Built a responsive website for desktop, tablet, and mobile using the Flutter framework. With an email sending feature, users can easily reach out for inquiries or support. The website is designed to provide a seamless user experience across all devices, ensuring accessibility and engagement for all visitors.',
                             ),
                           ],
                         ),
@@ -1003,7 +1003,7 @@ class _DesktopScreenState extends State<DesktopScreen>
                                 height: 20,
                               ),
                               const AutoSizeText(
-                                'harishselvampanneer@gmail.com',
+                                'harishpanneerselvam5@gmail.com',
                                 style: TextStyle(
                                   fontFamily: 'Preahvihear',
                                   fontWeight: FontWeight.w500,

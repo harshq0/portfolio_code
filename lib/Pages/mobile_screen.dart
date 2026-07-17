@@ -48,7 +48,7 @@ class _MobileScreenState extends State<MobileScreen> {
   Future<void> _launchMailURL() async {
     final Uri emailLaunchUri = Uri(
       scheme: 'mailto',
-      path: 'harishselvampanneer@gmail.com',
+      path: 'harishpanneerselvam5@gmail.com',
     );
 
     try {
@@ -375,7 +375,7 @@ class _MobileScreenState extends State<MobileScreen> {
                     ),
                     const SizedBox(height: 40),
                     const AutoSizeText(
-                      "I am a Flutter Developer with over 1.5+ year of experience. I focus on crafting meaningful digital products that balance user needs with business goals, specializing in user-friendly, responsive, and high-performance applications.",
+                      "I am a Flutter Developer with over 2 years of experience. I focus on crafting meaningful digital products that balance user needs with business goals, specializing in user-friendly, responsive, and high-performance applications.",
                       style: TextStyle(
                         fontFamily: 'Preahvihear',
                         fontWeight: FontWeight.w500,
@@ -434,7 +434,7 @@ class _MobileScreenState extends State<MobileScreen> {
                                     spacing: 8,
                                     children: [
                                       AutoSizeText(
-                                        'I am working at Lentera Technologies Private Limited',
+                                        'Flutter Developer at Lentera Technologies Private Limited',
                                         style: TextStyle(
                                           fontFamily: 'poppins-medium',
                                           fontSize: 10,
@@ -490,7 +490,7 @@ class _MobileScreenState extends State<MobileScreen> {
                             ),
                             image: 'assets/png/responsive-image.png',
                             text:
-                                'Developed and maintained  cross-platform mobile  applications using Flutter and Dart.'),
+                                'Developed and maintained cross-platform mobile applications using Flutter and Dart.'),
                         experienceContainer(
                             gradient: const LinearGradient(
                               begin: Alignment.topLeft,
@@ -503,7 +503,7 @@ class _MobileScreenState extends State<MobileScreen> {
                             ),
                             image: 'assets/png/api-image.png',
                             text:
-                                'Implemented REST API integrations  to support real-time data flow  and enhance appresponsiveness.'),
+                                'Implemented REST API integrations to support real-time data flow and enhance app responsiveness.'),
                         experienceContainer(
                             gradient: const LinearGradient(
                               begin: Alignment.topLeft,
@@ -516,7 +516,7 @@ class _MobileScreenState extends State<MobileScreen> {
                             ),
                             image: 'assets/png/notification-image.png',
                             text:
-                                'Integrated FCM  (Firebase Cloud Messaging) for  push notifications  and real-time alerts.'),
+                                'Integrated FCM (Firebase Cloud Messaging) for push notifications and real-time alerts.'),
                         experienceContainer(
                             gradient: const LinearGradient(
                               begin: Alignment.topLeft,
@@ -669,7 +669,7 @@ class _MobileScreenState extends State<MobileScreen> {
                               ),
                             ),
                             const AutoSizeText(
-                              'IOT Based Solar Panel Application',
+                              'IoT Based Solar Panel Application',
                               style: TextStyle(
                                 fontFamily: 'poppins-semiBold',
                                 fontWeight: FontWeight.w500,
@@ -680,9 +680,9 @@ class _MobileScreenState extends State<MobileScreen> {
                             const SizedBox(height: 15),
                             projectContainer(
                                 technologiesText:
-                                    'Flutter, Dart, REST API, FCM, Rasorpay (Payment Gateway).',
+                                    'Flutter, Dart, REST API, FCM, Razorpay (Payment Gateway).',
                                 text:
-                                    'I built a responsive design for both Android and iOS applications for customer and installer sides using the Flutter framework. I implemented REST API integrations to support real-time data flow and improve app responsiveness. I integrated Firebase Cloud Messaging (FCM) for push notifications and real-time alerts. I focused on performance optimization, error handling, and ensuring smooth UI transitions. '),
+                                    'Built a responsive design for Android and iOS applications for both customer and installer platforms using the Flutter framework. Implemented REST API integrations to support real-time data flow and improve app responsiveness. Integrated Firebase Cloud Messaging (FCM) for push notifications and real-time alerts. Focused on performance optimization, error handling, and ensuring smooth UI transitions.'),
                           ],
                         ),
                         const SizedBox(height: 20),
@@ -699,7 +699,7 @@ class _MobileScreenState extends State<MobileScreen> {
                               ),
                             ),
                             const AutoSizeText(
-                              'Henkal Digital Presenter Application',
+                              'Henkel Digital Presenter Application',
                               style: TextStyle(
                                 fontFamily: 'poppins-semiBold',
                                 fontWeight: FontWeight.w500,
@@ -726,9 +726,9 @@ class _MobileScreenState extends State<MobileScreen> {
                                 ),
                               ),
                               technologiesText:
-                                  'Flutter, Dart, REST API, Provider(State Management),MVVM, Animations.',
+                                  'Flutter, Dart, REST API, Provider(State Management), MVVM, Animations.',
                               text:
-                                  'Developed a digital application for sales and merchandising teams to view, manage, and present Henkel Beauty Care products across GCC retail stores. The app includes product details, brand visuals, features, benefits, barcodes, and must-stock lists, helping teams ensure brand consistency, planogram compliance, and effective in-store execution. It serves as a reference and presentation tool, enhancing efficiency and accuracy during store visits.',
+                                  'Developed a digital application for sales and merchandising teams to view, manage, and present Henkel Beauty Care products across GCC retail stores. The app includes product details, brand visuals, features, benefits, barcodes, and must-stock lists, helping teams ensure brand consistency, planogram compliance, and effective in-store execution. It serves as a reference and presentation tool, enhancing efficiency and accuracy during store visits. The application is live on both Android and iOS.',
                             ),
                           ],
                         ),
@@ -746,7 +746,7 @@ class _MobileScreenState extends State<MobileScreen> {
                               ),
                             ),
                             const AutoSizeText(
-                              'Zuvonne(Website)',
+                              'Zuvonne (Website)',
                               style: TextStyle(
                                 fontFamily: 'poppins-semiBold',
                                 fontWeight: FontWeight.w500,
@@ -769,7 +769,7 @@ class _MobileScreenState extends State<MobileScreen> {
                               liveUrl: 'zuvonne website',
                               technologiesText: 'Flutter, Dart',
                               text:
-                                  'I have build a responsive website for desktop, tablet, and mobile using the Flutter framework. With a email sending feature, users can easily reach out for inquiries or support. The website is designed to provide a seamless user experience across all devices, ensuring accessibility and engagement for all visitors.The application is live on both Android and iOS.',
+                                  'Built a responsive website for desktop, tablet, and mobile using the Flutter framework. With an email sending feature, users can easily reach out for inquiries or support. The website is designed to provide a seamless user experience across all devices, ensuring accessibility and engagement for all visitors.',
                             ),
                           ],
                         ),
@@ -800,7 +800,7 @@ class _MobileScreenState extends State<MobileScreen> {
                             height: 16,
                           ),
                           const AutoSizeText(
-                            'harishselvampanneer@gmail.com',
+                            'harishpanneerselvam5@gmail.com',
                             style: TextStyle(
                               fontFamily: 'Preahvihear',
                               fontWeight: FontWeight.w500,

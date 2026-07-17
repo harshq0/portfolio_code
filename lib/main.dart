@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     globalHeight = MediaQuery.of(context).size.height;
     globalWidth = MediaQuery.of(context).size.width;
     return MaterialApp(
-      title: 'My Portfolio',
+      title: 'Harish Portfolio',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
